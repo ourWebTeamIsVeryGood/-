@@ -12,10 +12,10 @@ import '@/assets/styles/ruoyi.scss' // ruoyi css
 import App from './App'
 import store from './store'
 import router from './router'
-// import permission from './directive/permission'
+import permission from './directive/permission'
 
 import './assets/icons' // icon
-// import './permission' // permission control
+import './permission' // permission control
 import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, download, handleTree } from "@/utils/ruoyi";
@@ -46,7 +46,7 @@ Vue.prototype.msgInfo = function (msg) {
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
 
-// Vue.use(permission)
+Vue.use(permission)
 
 /**
  * If you don't want to use mock-server
