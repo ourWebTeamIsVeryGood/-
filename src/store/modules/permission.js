@@ -19,7 +19,30 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          const accessedRoutes = filterAsyncRouter(res.data)
+          let arr = [];
+          for(let i=0;i<res.length;i++){
+            let obj={};
+            if(res[i].pageurl==""){
+              obj.alwaysShow=true;
+              obj.component = "Layout";
+              obj.redirect="noRedirect";
+            }else{
+              obj.component=res[i].pageurl;
+            }
+            obj.hidden=false;
+            obj.name=res[i].pageurl;
+            obj.path=res[i].pageurl;
+            obj.meta={
+              icon:res[i].icon,
+              title:res[i].name
+            }
+            obj.children=[];
+            arr.push(obj);
+            if(res[i].leaf.length!=0){
+              list(arr[i].children,res[i].leaf);
+            }
+          }
+          const accessedRoutes = filterAsyncRouter(arr)
           accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
           commit('SET_ROUTES', accessedRoutes)
           resolve(accessedRoutes)
@@ -28,7 +51,31 @@ const permission = {
     }
   }
 }
-
+// 递归修改数据
+function list(arr,res){
+  for(let i=0;i<res.length;i++){
+    let obj={};
+    if(res[i].pageurl==""){
+      obj.alwaysShow=true;
+      obj.component = "Layout";
+      obj.redirect="noRedirect";
+    }else{
+      obj.component=res[i].pageurl;
+    }
+    obj.hidden=false;
+    obj.name=res[i].pageurl;
+    obj.path=res[i].pageurl;
+    obj.meta={
+      icon:res[i].icon,
+      title:res[i].name
+    }
+    obj.children=[];
+    arr.push(obj);
+    if(res[i].leaf&&res[i].leaf.length!=0){
+      list(arr[i].children,res[i].leaf);
+    }
+  }
+}
 // 遍历后台传来的路由字符串，转换为组件对象
 function filterAsyncRouter(asyncRouterMap) {
   return asyncRouterMap.filter(route => {

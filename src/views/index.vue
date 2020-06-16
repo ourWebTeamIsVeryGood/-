@@ -1,77 +1,116 @@
 <template>
   <div class="dashboard-editor-container">
+    <panel-group @handleData="handleData" />
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
-
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
-    </el-row>
+    </el-row> -->
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
+      <el-col :xs="24" :sm="24" :lg="12">
         <div class="chart-wrapper">
-          <raddar-chart />
+          <carUseBarChart/>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
+      <el-col :xs="24" :sm="24" :lg="12">
+        <div ref="print" class="chart-wrapper">
+          <peopleCar/>
         </div>
       </el-col>
     </el-row>
-
-    
+    <!-- 借车弹窗 -->
+    <el-dialog width="30%" top="20vh" title="借车" :visible.sync="borrowCarStatus">
+      <el-form size="mini" :model="borrowCarForm">
+        <el-form-item label="活动名称" label-width="80px">
+          <el-input v-model="borrowCarForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="活动区域" label-width="80px">
+          <el-select v-model="borrowCarForm.region" placeholder="请选择活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="borrowCarStatus = false">取 消</el-button>
+        <el-button type="primary" @click="borrowCarStatus = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog width="30%" top="20vh" title="还车" :visible.sync="returnCarStatus">
+      <el-form size="mini" :model="returnCarForm">
+        <el-form-item label="活动名称" label-width="80px">
+          <el-input v-model="returnCarForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="活动区域" label-width="80px">
+          <el-select v-model="returnCarForm.region" placeholder="请选择活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="returnCarStatus = false">取 消</el-button>
+        <el-button type="primary" @click="returnCarStatus = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import PanelGroup from './dashboard/PanelGroup'
-import LineChart from './dashboard/LineChart'
-import RaddarChart from './dashboard/RaddarChart'
-import PieChart from './dashboard/PieChart'
-import BarChart from './dashboard/BarChart'
-
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
+import carUseBarChart from './dashboard/carUseBarChart'
+import peopleCar from './dashboard/peopleCar'
 
 export default {
   name: 'Index',
   components: {
     PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart
+    carUseBarChart,
+    peopleCar
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      borrowCarStatus:false,
+      borrowCarForm:{},
+      returnCarStatus:false,
+      returnCarForm:{}
     }
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+    handleData(type) {
+      eval("this."+type+"()");
+    },
+    borrowCar(){
+      this.borrowCarStatus=true;
+    },
+    returnCar(){
+      this.returnCarStatus=true;
+    },
+    exit(){
+      this.$confirm("确定出口抬杆？","提示",{
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        // lockScroll:false,
+        type: "warning"
+      }).then(_=>{
+          this.msgSuccess("抬杆成功");
+      }).catch(_=>{
+          console.log("取消");
+      })
+    },
+    entrance(){
+      this.$confirm("确定进口抬杆？","提示",{
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(_=>{
+          this.msgSuccess("抬杆成功");
+      }).catch(_=>{
+          console.log("取消");
+      })
+    },
+    myprint(){
+      
     }
   }
 }
@@ -85,7 +124,7 @@ export default {
 
   .chart-wrapper {
     background: #fff;
-    padding: 16px 16px 0;
+    // padding: 16px 16px 0;
     margin-bottom: 32px;
   }
 }

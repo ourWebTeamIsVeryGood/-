@@ -18,7 +18,8 @@
 
 <script>
 import { updateUserPwd } from "@/api/system/user";
-
+import { logout } from '@/api/login'
+import Cookies from "js-cookie";
 export default {
   data() {
     const equalToPassword = (rule, value, callback) => {
@@ -53,15 +54,18 @@ export default {
   },
   methods: {
     submit() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate(async valid => {
         if (valid) {
-          updateUserPwd(this.user.oldPassword, this.user.newPassword).then(
-            response => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-              }
-            }
-          );
+          let response = await updateUserPwd(this.user.oldPassword, this.user.newPassword);
+          if (response.code === 200) {
+            this.msgSuccess("修改成功,请重新登录");
+            Cookies.remove("password");
+            Cookies.remove('rememberMe');
+            await logout();
+            setTimeout(()=>{
+              window.location="/";
+            },1000)
+          }
         }
       });
     },

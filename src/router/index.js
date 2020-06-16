@@ -55,7 +55,7 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
-    redirect: 'index',
+    redirect: 'login',
     children: [
       {
         path: 'index',
@@ -75,7 +75,7 @@ export const constantRoutes = [
         path: 'profile',
         component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
         name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
+        meta: { title: '修改密码', icon: 'user' }
       }
     ]
   },

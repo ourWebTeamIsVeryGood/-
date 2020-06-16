@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
+    
     <el-row :gutter="20">
-      <el-col :span="6" :xs="24">
+      <!-- <el-col :span="6" :xs="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>个人信息</span>
@@ -38,10 +39,10 @@
             </ul>
           </div>
         </el-card>
-      </el-col>
-      <el-col :span="18" :xs="24">
+      </el-col> -->
+      <el-col :span="24" :xs="24">
         <el-card>
-          <div slot="header" class="clearfix">
+          <!-- <div slot="header" class="clearfix">
             <span>基本资料</span>
           </div>
           <el-tabs v-model="activeTab">
@@ -51,7 +52,14 @@
             <el-tab-pane label="修改密码" name="resetPwd">
               <resetPwd :user="user" />
             </el-tab-pane>
-          </el-tabs>
+          </el-tabs> -->
+          <!-- <el-tab-pane label="修改密码" name="resetPwd">
+              <resetPwd :user="user" />
+            </el-tab-pane> -->
+            <div slot="header" class="clearfix">
+              <span>修改密码</span>
+            </div>
+            <resetPwd :user="user" />
         </el-card>
       </el-col>
     </el-row>
@@ -76,7 +84,7 @@ export default {
     };
   },
   created() {
-    this.getUser();
+    // this.getUser();
   },
   methods: {
     getUser() {
